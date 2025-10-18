@@ -6,8 +6,6 @@ export default function GameCanvas({ phaserGameRef }) {
   const gameRef = useRef(null);
   // 传递Zustand store API（而非一次性快照），避免在Phaser场景中读取到旧值
   const gameStore = useGameStore; // 注意：不调用hook，直接传递store函数本身
-  // UI层使用hook读取orientation与操作
-  const { orientation, setOrientation } = useGameStore();
 
   // 移动端检测（更稳健）
   const isMobile = useMemo(() => {
@@ -43,14 +41,15 @@ export default function GameCanvas({ phaserGameRef }) {
   }, []); // 只在mount时执行一次
   
   return (
-    <div className="relative w-full h-full">
+    <div className="fixed inset-0">
       <div 
         ref={gameRef} 
-        className="w-full h-screen flex items-center justify-center bg-sky-200 relative overflow-hidden"
+        className="w-full h-full relative overflow-hidden"
         style={{
           touchAction: 'none',
           userSelect: 'none',
-          WebkitUserSelect: 'none'
+          WebkitUserSelect: 'none',
+          background: 'transparent'
         }}
       />
       {/* 移除移动端横竖屏切换按钮：按需求默认横屏，无按钮 */}

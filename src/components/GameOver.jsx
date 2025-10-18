@@ -7,6 +7,7 @@ export default function GameOver({ onRestart, onMenu }) {
   const [playerName, setPlayerName] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,15 +16,18 @@ export default function GameOver({ onRestart, onMenu }) {
       setSubmitting(true);
       const name = playerName.trim() || '匿名玩家';
       
-      // 提交到云端排行榜
+      // 提交到云端排行榜（内部已支持离线回退）
       const updatedLeaderboard = await submitScore(name, currentScore);
       setLeaderboard(updatedLeaderboard);
       
-      console.log('✅ 分数已提交:', name, currentScore);
+      console.log('✅ 分数已提交/离线保存:', name, currentScore);
       setSubmitted(true);
+      setSubmitError(false);
     } catch (error) {
-      console.error('提交失败:', error);
-      alert('提交失败,请稍后再试');
+      console.error('提交异常:', error);
+      // 不弹窗，改为友好提示并标记为已保存（避免用户干扰）
+      setSubmitted(true);
+      setSubmitError(true);
     } finally {
       setSubmitting(false);
     }
@@ -76,8 +80,8 @@ export default function GameOver({ onRestart, onMenu }) {
         )}
         
         {submitted && (
-          <div className="mb-6 p-3 bg-green-100 text-green-700 rounded-lg text-center">
-            ✓ 已提交到排行榜!
+          <div className={`mb-6 p-3 rounded-lg text-center ${submitError ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'}`}>
+            {submitError ? '已离线保存到本地排行榜 (网络不可用)' : '✓ 已提交到排行榜!'}
           </div>
         )}
         

@@ -38,7 +38,13 @@ export async function fetchLeaderboard() {
     return data.record || [];
   } catch (error) {
     console.error('获取排行榜失败:', error);
-    return [];
+    // 离线/错误回退：尝试读取本地排行榜
+    try {
+      const local = localStorage.getItem(LEADERBOARD_KEY);
+      return local ? JSON.parse(local) : [];
+    } catch {
+      return [];
+    }
   }
 }
 
@@ -48,28 +54,22 @@ export async function fetchLeaderboard() {
  * @param {number} score - 分数
  */
 export async function submitScore(playerName, score) {
+  // 预构造记录，便于错误回退
+  const newEntry = {
+    playerName: playerName.trim() || '匿名玩家',
+    score,
+    date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+    timestamp: Date.now()
+  };
+  
   try {
-    const newEntry = {
-      playerName: playerName.trim() || '匿名玩家',
-      score,
-      date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
-      timestamp: Date.now()
-    };
-    
     if (USE_LOCAL_STORAGE) {
       // 本地存储模拟
       let leaderboard = await fetchLeaderboard();
-      
-      // 添加新记录
       leaderboard.push(newEntry);
-      
-      // 按分数排序，取前10名
       leaderboard.sort((a, b) => b.score - a.score);
       leaderboard = leaderboard.slice(0, 10);
-      
-      // 保存
       localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard));
-      
       return leaderboard;
     }
     
@@ -94,8 +94,21 @@ export async function submitScore(playerName, score) {
     
     return leaderboard;
   } catch (error) {
-    console.error('提交分数失败:', error);
-    throw error;
+    console.error('提交分数失败，进行离线回退:', error);
+    // 离线/错误回退：写入本地排行榜，避免前端提示失败
+    try {
+      let localBoard = [];
+      const raw = localStorage.getItem(LEADERBOARD_KEY);
+      if (raw) localBoard = JSON.parse(raw);
+      localBoard.push(newEntry);
+      localBoard.sort((a, b) => b.score - a.score);
+      localBoard = localBoard.slice(0, 10);
+      localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(localBoard));
+      return localBoard;
+    } catch (e) {
+      console.error('离线回退失败:', e);
+      return [];
+    }
   }
 }
 
