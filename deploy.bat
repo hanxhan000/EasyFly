@@ -42,14 +42,14 @@ if errorlevel 1 (
 echo 构建完成！
 echo.
 
-REM 推送到GitHub主分支
+REM 推送到GitHub主分支（保留源码）
 echo [5/6] 推送代码到GitHub主分支...
 git branch -M main
 git push -u origin main --force
 echo 主分支推送完成！
 echo.
 
-REM 部署到GitHub Pages
+REM 部署到GitHub Pages（gh-pages分支）
 echo [6/6] 部署到GitHub Pages...
 call npm run deploy
 if errorlevel 1 (

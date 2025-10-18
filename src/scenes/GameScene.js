@@ -9,6 +9,7 @@ export default class GameScene extends Phaser.Scene {
   }
   
   init(data) {
+    // 接收Zustand store API（useGameStore），用于在场景中读取最新状态
     this.gameStore = data.gameStore;
   }
   
@@ -36,7 +37,7 @@ export default class GameScene extends Phaser.Scene {
     this.scoreText = this.add.text(
       actualWidth / 2,
       50,
-      this.gameStore.currentScore.toString(),
+      this.gameStore.getState().currentScore.toString(),
       {
         fontSize: '64px',
         fontFamily: 'Poppins, Arial, sans-serif',
@@ -511,7 +512,7 @@ export default class GameScene extends Phaser.Scene {
     this.player.update(delta);
     
     // 更新崖壁（使用 gameStore 中的分数）
-    this.wallManager.update(delta, this.gameStore.currentScore);
+    this.wallManager.update(delta, this.gameStore.getState().currentScore);
     
     // 检查边界碰撞 (飞机碰到顶部或底部) - 使用实际画布高度
     const gameHeight = this.cameras.main.height;
@@ -535,10 +536,11 @@ export default class GameScene extends Phaser.Scene {
     console.log('[GameScene] 检查穿越 - 飞机位置:', Math.round(this.player.x));
     const passScore = this.wallManager.checkPassed(this.player.x);
     if (passScore > 0) {
-      console.log('[GameScene] 🎯 得分!', { passScore, currentScore: this.gameStore.currentScore });
-      // 直接更新 gameStore
-      const newScore = this.gameStore.currentScore + passScore;
-      this.gameStore.updateScore(newScore);
+      const currentScore = this.gameStore.getState().currentScore;
+      const newScore = currentScore + passScore;
+      console.log('[GameScene] 🎯 得分!', { passScore, currentScore, newScore });
+      // 使用Zustand API读取最新状态并更新
+      this.gameStore.getState().updateScore(newScore);
       
       // 更新显示
       this.scoreText.setText(newScore.toString());
@@ -555,7 +557,7 @@ export default class GameScene extends Phaser.Scene {
       // 通过音效
       this.playSound('pass');
     } else {
-      console.log('[GameScene] 未得分 - 当前分数:', this.gameStore.currentScore);
+      console.log('[GameScene] 未得分 - 当前分数:', this.gameStore.getState().currentScore);
     }
   }
   
@@ -575,8 +577,8 @@ export default class GameScene extends Phaser.Scene {
     // 播放碰撞音效
     this.playSound('collision');
     
-    // 更新游戏状态
-    this.gameStore.endGame();
+    // 更新游戏状态（确保读取API最新状态）
+    this.gameStore.getState().endGame();
     
     // 延迟显示结束界面
     this.time.delayedCall(500, () => {

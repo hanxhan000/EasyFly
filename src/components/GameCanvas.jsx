@@ -4,7 +4,8 @@ import { useGameStore } from '../stores/gameStore';
 
 export default function GameCanvas({ phaserGameRef }) {
   const gameRef = useRef(null);
-  const gameStore = useGameStore();
+  // 传递Zustand store API（而非一次性快照），避免在Phaser场景中读取到旧值
+  const gameStore = useGameStore; // 注意：不调用hook，直接传递store函数本身
   
   useEffect(() => {
     console.log('[GameCanvas] useEffect 触发', { 
