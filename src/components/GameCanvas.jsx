@@ -19,19 +19,19 @@ export default function GameCanvas({ phaserGameRef }) {
   }, []);
   
   useEffect(() => {
-    // 移动端默认强制横屏布局（仅设置状态，不改变系统旋转）
+    // 移动端默认强制竖屏布局（仅设置状态，不改变系统旋转）
     if (isMobile) {
       try {
-        useGameStore.getState().setOrientation('landscape');
+        useGameStore.getState().setOrientation('portrait');
       } catch {}
     }
     
     // 每次mount都创建新的Phaser实例（因为返回菜单时已销毁）
     if (gameRef.current && !phaserGameRef.current) {
       phaserGameRef.current = new PhaserGame(gameRef.current, gameStore);
-      // 初始化后通知Phaser按移动端横屏尺寸计算
+      // 初始化后通知Phaser按移动端竖屏尺寸计算
       if (isMobile && phaserGameRef.current?.setOrientation) {
-        phaserGameRef.current.setOrientation('landscape');
+        phaserGameRef.current.setOrientation('portrait');
       }
     }
     
@@ -52,7 +52,7 @@ export default function GameCanvas({ phaserGameRef }) {
           background: 'transparent'
         }}
       />
-      {/* 移除移动端横竖屏切换按钮：按需求默认横屏，无按钮 */}
+      {/* 移除移动端横竖屏切换按钮：需求为默认竖屏，无按钮 */}
     </div>
   );
 }

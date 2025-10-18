@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useGameStore } from '../stores/gameStore';
 import { submitScore } from '../utils/api';
 
@@ -33,21 +33,37 @@ export default function GameOver({ onRestart, onMenu }) {
     }
   };
   
-  // 容器宽高比例：根据方向与视口自适应，避免移动端遮挡
+  // 设备类型与方向
   const isLandscape = orientation === 'landscape';
-  const containerClasses = `bg-white/95 rounded-2xl shadow-2xl ${isLandscape ? 'p-5' : 'p-6'} ` +
-    `${isLandscape ? 'max-w-[70vw]' : 'max-w-[90vw]'} ` +
-    'w-[clamp(340px,70vw,720px)] max-h-[85vh] overflow-y-auto';
+  const isMobile = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const touchPoints = navigator.maxTouchPoints && navigator.maxTouchPoints > 0;
+    const ua = navigator.userAgent || '';
+    return (coarse || touchPoints || /Android|iPhone|iPod|iPad|Mobile/i.test(ua));
+  }, []);
+  
+  // 容器宽度缩小：PC 更窄、移动端竖屏更贴合视口
+  let widthClass = 'w-[clamp(320px,42vw,540px)]'; // 默认PC更紧凑
+  if (isMobile) {
+    widthClass = isLandscape
+      ? 'w-[clamp(320px,80vw,520px)]'
+      : 'w-[clamp(280px,92vw,420px)]';
+  }
+  
+  const containerClasses = `bg-white/95 rounded-2xl shadow-2xl ${isLandscape ? 'p-4' : 'p-5'} ${widthClass} max-h-[82vh] overflow-y-auto`;
+  const scoreSizeClass = isMobile ? 'text-4xl' : 'text-5xl';
+  const titleSizeClass = isMobile ? 'text-2xl' : 'text-3xl';
   
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[3000]" style={{ backgroundColor: 'transparent', pointerEvents: 'auto' }}>
       <div className={containerClasses}>
-        <h2 className="text-3xl font-bold text-game-blue mb-4 text-center">游戏结束</h2>
+        <h2 className={`${titleSizeClass} font-bold text-game-blue mb-4 text-center`}>游戏结束</h2>
         
         <div className={`mb-4 flex ${isLandscape ? 'flex-row gap-6 items-center justify-between' : 'flex-col gap-2 items-center'}`}>
           <div className="text-center">
             <p className="text-lg text-gray-600">本次得分</p>
-            <p className="text-5xl font-extrabold text-game-blue">{currentScore}</p>
+            <p className={`${scoreSizeClass} font-extrabold text-game-blue`}>{currentScore}</p>
           </div>
           <div className="text-center">
             <p className="text-lg text-gray-600">最高纪录</p>
