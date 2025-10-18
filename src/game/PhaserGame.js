@@ -45,15 +45,22 @@ export default class PhaserGame {
     this.game = new Phaser.Game(config);
     this.gameStore = gameStore;
     this.parent = parent;
+    // 设备类型判断
+    this.isMobile = typeof window !== 'undefined' && (
+      (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
+      /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '')
+    );
     
     console.log('[PhaserGame] 游戏实例创建完成');
     
     // 传递gameStore到场景
     this.game.scene.start('GameScene', { gameStore });
 
-    // 初始化尺寸为当前方向
+    // 移动端按当前方向初始化尺寸；Web端保持整屏占用
     const initialOrientation = this.gameStore.getState().orientation;
-    this.setOrientation(initialOrientation);
+    if (this.isMobile) {
+      this.setOrientation(initialOrientation);
+    }
   }
   
   destroy() {
@@ -81,9 +88,10 @@ export default class PhaserGame {
     }
   }
   
-  // 新增：根据方向设置游戏基础尺寸（使用常见纵横比）
+  // 新增：根据方向设置游戏基础尺寸（使用常见纵横比），仅移动端执行
   setOrientation(orientation) {
     if (!this.game || !this.game.scale) return;
+    if (!this.isMobile) return; // Web端不调整固定尺寸，保持整屏
     const PORTRAIT = { width: 480, height: 840 };
     const LANDSCAPE = { width: 840, height: 480 };
     const target = orientation === 'landscape' ? LANDSCAPE : PORTRAIT;

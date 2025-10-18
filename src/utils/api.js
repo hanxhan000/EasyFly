@@ -6,7 +6,7 @@ const BIN_ID = '6794f8e5ad19ca34f8d8c42f'; // 排行榜数据的Bin ID
 const API_KEY = '$2a$10$pRRfhsZ8Gs0K.kC4eKJFzOULz8gqXJP6EH0kPq9LkZv4xvQy9p8ha'; // JSONBin API密钥
 
 // 使用云端存储
-const USE_LOCAL_STORAGE = true; // GitHub Pages默认改为本地存储，避免暴露云端密钥
+const USE_LOCAL_STORAGE = false; // 生产环境启用云端排行榜，Web与手机端共享数据
 const LEADERBOARD_KEY = 'easyfly_leaderboard';
 
 /**

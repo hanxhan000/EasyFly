@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import PhaserGame from '../game/PhaserGame';
 import { useGameStore } from '../stores/gameStore';
 
@@ -8,6 +8,15 @@ export default function GameCanvas({ phaserGameRef }) {
   const gameStore = useGameStore; // 注意：不调用hook，直接传递store函数本身
   // UI层使用hook读取orientation与操作
   const { orientation, toggleOrientation } = useGameStore();
+
+  // 仅在移动端显示横竖屏切换按钮
+  const isMobile = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const ua = navigator.userAgent || '';
+    const mobileUA = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
+    return coarse || mobileUA;
+  }, []);
   
   useEffect(() => {
     console.log('[GameCanvas] useEffect 触发', { 
@@ -27,12 +36,13 @@ export default function GameCanvas({ phaserGameRef }) {
     };
   }, []); // 只在mount时执行一次
   
-  // 监听orientation变化，通知Phaser调整尺寸
+  // 监听orientation变化，移动端才通知Phaser调整尺寸；Web端保持整屏占用
   useEffect(() => {
+    if (!isMobile) return;
     if (phaserGameRef.current && phaserGameRef.current.setOrientation) {
       phaserGameRef.current.setOrientation(orientation);
     }
-  }, [orientation]);
+  }, [orientation, isMobile]);
   
   return (
     <div className="relative w-full h-full">
@@ -45,17 +55,19 @@ export default function GameCanvas({ phaserGameRef }) {
           WebkitUserSelect: 'none'
         }}
       />
-      {/* 横竖屏切换按钮（移动端优先） */}
-      <button
-        onClick={toggleOrientation}
-        className="absolute top-4 right-4 z-50 px-4 py-2 rounded-full shadow-md text-sm md:text-base"
-        style={{
-          background: 'linear-gradient(to right, #4A90E2, #357ABD)',
-          color: 'white'
-        }}
-      >
-        {orientation === 'portrait' ? '切到横屏' : '切到竖屏'}
-      </button>
+      {/* 横竖屏切换按钮：仅移动端显示 */}
+      {isMobile && (
+        <button
+          onClick={toggleOrientation}
+          className="absolute top-4 right-4 z-50 px-4 py-2 rounded-full shadow-md text-sm md:text-base"
+          style={{
+            background: 'linear-gradient(to right, #4A90E2, #357ABD)',
+            color: 'white'
+          }}
+        >
+          {orientation === 'portrait' ? '切到横屏' : '切到竖屏'}
+        </button>
+      )}
     </div>
   );
 }
