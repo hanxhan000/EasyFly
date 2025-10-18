@@ -31,9 +31,10 @@ export default class GameScene extends Phaser.Scene {
     // 创建崖壁管理器
     this.wallManager = new WallManager(this);
     
-    // 分数显示（从 gameStore 读取）
+    // 分数显示（从 gameStore 读取，使用实际画布尺寸）
+    const actualWidth = this.cameras.main.width;
     this.scoreText = this.add.text(
-      this.game.config.width / 2,
+      actualWidth / 2,
       50,
       this.gameStore.currentScore.toString(),
       {
@@ -530,7 +531,7 @@ export default class GameScene extends Phaser.Scene {
     console.log('[GameScene] 检查穿越 - 飞机位置:', Math.round(this.player.x));
     const passScore = this.wallManager.checkPassed(this.player.x);
     if (passScore > 0) {
-      console.log('[GameScene] 🎯 得分!', { passScore });
+      console.log('[GameScene] 🎯 得分!', { passScore, currentScore: this.gameStore.currentScore });
       // 直接更新 gameStore
       const newScore = this.gameStore.currentScore + passScore;
       this.gameStore.updateScore(newScore);
