@@ -3,7 +3,7 @@ import { useGameStore } from '../stores/gameStore';
 import { submitScore } from '../utils/api';
 
 export default function GameOver({ onRestart, onMenu }) {
-  const { currentScore, highScore, setLeaderboard } = useGameStore();
+  const { currentScore, highScore, setLeaderboard, orientation } = useGameStore();
   const [playerName, setPlayerName] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -29,39 +29,30 @@ export default function GameOver({ onRestart, onMenu }) {
     }
   };
   
-  const percentile = Math.min(Math.floor((currentScore / 100) * 100), 99);
+  const containerStyle = orientation === 'landscape'
+    ? 'w-[640px] max-w-[80vw]'
+    : 'w-[480px] max-w-[90vw]';
   
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl">
-        <h2 className="text-4xl font-bold text-center text-gray-800 mb-6">
-          游戏结束
-        </h2>
+    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'transparent' }}>
+      <div className={`bg-white/95 rounded-2xl shadow-2xl p-6 ${containerStyle}`}>
+        <h2 className="text-3xl font-bold text-game-blue mb-4 text-center">游戏结束</h2>
         
-        <div className="mb-8">
-          <div className="text-center mb-4">
-            <p className="text-gray-600 mb-2">本局分数</p>
-            <p className="text-6xl font-bold text-game-blue">{currentScore}</p>
-          </div>
-          
-          <div className="text-center mb-4">
-            <p className="text-gray-600 mb-1">最高分</p>
-            <p className="text-3xl font-semibold text-gray-700">{highScore}</p>
-          </div>
-          
+        <div className={`mb-4 flex ${orientation === 'landscape' ? 'flex-row gap-6 items-center justify-between' : 'flex-col gap-2 items-center'}`}>
           <div className="text-center">
-            <p className="text-sm text-gray-500">
-              你击败了 <span className="text-game-blue font-semibold">{percentile}%</span> 的玩家
-            </p>
+            <p className="text-lg text-gray-600">本次得分</p>
+            <p className="text-5xl font-extrabold text-game-blue">{currentScore}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-lg text-gray-600">最高纪录</p>
+            <p className="text-3xl font-bold text-orange-500">{highScore}</p>
           </div>
         </div>
         
         {!submitted && (
-          <form onSubmit={handleSubmit} className="mb-6">
-            <p className="text-center text-sm text-gray-600 mb-3">
-              {currentScore >= 50 ? '🎉 恭喜!分数不错,留下你的大名吧' : '💪 继续加油!留下你的昵称吧'}
-            </p>
-            <div className="flex gap-2">
+          <form onSubmit={handleSubmit} className="mb-4">
+            <label className="block mb-2 text-gray-700">提交到排行榜(可选)</label>
+            <div className={`flex ${orientation === 'landscape' ? 'flex-row gap-3' : 'flex-col gap-3'}`}>
               <input
                 type="text"
                 value={playerName}
@@ -87,7 +78,7 @@ export default function GameOver({ onRestart, onMenu }) {
           </div>
         )}
         
-        <div className="flex gap-3">
+        <div className={`flex ${orientation === 'landscape' ? 'flex-row gap-3' : 'flex-col gap-3'}`}>
           <button
             onClick={onRestart}
             className="flex-1 btn-primary"

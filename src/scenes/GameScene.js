@@ -54,10 +54,39 @@ export default class GameScene extends Phaser.Scene {
     // 输入处理
     this.setupInput();
     
+    // 监听尺寸变化以适配横竖屏
+    this.scale.on('resize', this.onResize, this);
+    // 初始按当前方向微调分数文本位置
+    this.applyOrientationLayout();
+    
     // 游戏状态
     this.isGameActive = true;
     
     console.log('[GameScene] 游戏场景初始化完成');
+  }
+  
+  // 根据当前store中的orientation调整UI布局
+  applyOrientationLayout() {
+    const orientation = this.gameStore.getState().orientation;
+    const w = this.cameras.main.width;
+    this.scoreText.x = w / 2;
+    this.scoreText.y = orientation === 'landscape' ? 30 : 50;
+  }
+  
+  onResize(gameSize) {
+    console.log('[GameScene] onResize', gameSize);
+    // 重新定位玩家和分数文本
+    const w = gameSize.width;
+    const h = gameSize.height;
+    if (this.player) {
+      this.player.x = PLAYER_CONFIG.X;
+      this.player.y = h / 2;
+    }
+    if (this.scoreText) {
+      this.scoreText.x = w / 2;
+    }
+    // 按方向应用顶部间距
+    this.applyOrientationLayout();
   }
   
   createBackground() {
@@ -623,6 +652,17 @@ export default class GameScene extends Phaser.Scene {
     
     // 清理所有计时器
     this.time.removeAllEvents();
+
+    // 移除输入事件监听，避免重启后异常
+    if (this.input) {
+      this.input.removeAllListeners();
+      if (this.input.keyboard) {
+        this.input.keyboard.removeAllListeners();
+      }
+    }
+    if (this.spaceKey && this.spaceKey.removeAllListeners) {
+      this.spaceKey.removeAllListeners();
+    }
     
     console.log('[GameScene] 资源清理完成');
   }

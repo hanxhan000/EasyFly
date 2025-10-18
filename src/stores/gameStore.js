@@ -8,6 +8,8 @@ export const useGameStore = create((set, get) => ({
   isGameOver: false,
   currentScore: 0,
   highScore: storage.getHighScore(),
+  // 新增：UI方向（portrait/landscape）
+  orientation: 'portrait',
   
   // 设置
   soundEnabled: storage.getSoundEnabled(),
@@ -64,5 +66,12 @@ export const useGameStore = create((set, get) => ({
     currentScore: 0 
   }),
   
-  setLeaderboard: (data) => set({ leaderboard: data })
+  setLeaderboard: (data) => set({ leaderboard: data }),
+  
+  // 新增：方向切换
+  setOrientation: (o) => set({ orientation: o }),
+  toggleOrientation: () => {
+    const now = get().orientation;
+    set({ orientation: now === 'portrait' ? 'landscape' : 'portrait' });
+  }
 }));

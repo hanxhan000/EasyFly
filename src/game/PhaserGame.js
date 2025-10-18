@@ -44,11 +44,16 @@ export default class PhaserGame {
     
     this.game = new Phaser.Game(config);
     this.gameStore = gameStore;
+    this.parent = parent;
     
     console.log('[PhaserGame] 游戏实例创建完成');
     
     // 传递gameStore到场景
     this.game.scene.start('GameScene', { gameStore });
+
+    // 初始化尺寸为当前方向
+    const initialOrientation = this.gameStore.getState().orientation;
+    this.setOrientation(initialOrientation);
   }
   
   destroy() {
@@ -73,6 +78,23 @@ export default class PhaserGame {
           this.game.scene.start('GameScene', { gameStore: this.gameStore });
         }, 100);
       }
+    }
+  }
+  
+  // 新增：根据方向设置游戏基础尺寸（使用常见纵横比）
+  setOrientation(orientation) {
+    if (!this.game || !this.game.scale) return;
+    const PORTRAIT = { width: 480, height: 840 };
+    const LANDSCAPE = { width: 840, height: 480 };
+    const target = orientation === 'landscape' ? LANDSCAPE : PORTRAIT;
+    
+    console.log('[PhaserGame] 设置方向', { orientation, target });
+    try {
+      this.game.scale.setGameSize(target.width, target.height);
+      // 触发一次刷新以通知场景
+      this.game.scale.refresh();
+    } catch (e) {
+      console.warn('[PhaserGame] 设置方向失败', e);
     }
   }
 }
