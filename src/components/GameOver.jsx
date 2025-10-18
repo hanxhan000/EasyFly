@@ -34,7 +34,7 @@ export default function GameOver({ onRestart, onMenu }) {
     : 'w-[480px] max-w-[90vw]';
   
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'transparent' }}>
+    <div className="fixed inset-0 flex items-center justify-center z-[3000]" style={{ backgroundColor: 'transparent', pointerEvents: 'auto' }}>
       <div className={`bg-white/95 rounded-2xl shadow-2xl p-6 ${containerStyle}`}>
         <h2 className="text-3xl font-bold text-game-blue mb-4 text-center">游戏结束</h2>
         
@@ -65,6 +65,7 @@ export default function GameOver({ onRestart, onMenu }) {
                 type="submit"
                 disabled={submitting}
                 className="px-6 py-2 bg-game-blue text-white rounded-full font-semibold hover:bg-game-blue-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ minWidth: 120 }}
               >
                 {submitting ? '提交中...' : '提交'}
               </button>

@@ -9,13 +9,15 @@ export default function GameCanvas({ phaserGameRef }) {
   // UI层使用hook读取orientation与操作
   const { orientation, toggleOrientation } = useGameStore();
 
-  // 仅在移动端显示横竖屏切换按钮
+  // 仅在移动端显示横竖屏切换按钮（更稳健的检测）
   const isMobile = useMemo(() => {
     if (typeof window === 'undefined') return false;
     const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const touchPoints = navigator.maxTouchPoints && navigator.maxTouchPoints > 0;
     const ua = navigator.userAgent || '';
-    const mobileUA = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
-    return coarse || mobileUA;
+    const mobileUA = /Android|iPhone|iPod|iPad|Mobile/i.test(ua);
+    const narrow = window.innerWidth <= 900; // 视口较窄
+    return (touchPoints || coarse || mobileUA) && narrow;
   }, []);
   
   useEffect(() => {
@@ -46,28 +48,32 @@ export default function GameCanvas({ phaserGameRef }) {
   
   return (
     <div className="relative w-full h-full">
-      <div 
-        ref={gameRef} 
-        className="w-full h-screen flex items-center justify-center bg-sky-200 relative overflow-hidden"
-        style={{
-          touchAction: 'none',
-          userSelect: 'none',
-          WebkitUserSelect: 'none'
-        }}
-      />
-      {/* 横竖屏切换按钮：仅移动端显示 */}
-      {isMobile && (
-        <button
-          onClick={toggleOrientation}
-          className="absolute top-4 right-4 z-50 px-4 py-2 rounded-full shadow-md text-sm md:text-base"
+      {/* 外层容器：桌面端增加左右留白，移动端占满宽度 */}
+      <div className={isMobile ? 'relative w-full h-screen' : 'relative w-full h-screen max-w-[1200px] mx-auto px-6'}>
+        <div 
+          ref={gameRef} 
+          className="w-full h-full flex items-center justify-center bg-sky-200 relative overflow-hidden"
           style={{
-            background: 'linear-gradient(to right, #4A90E2, #357ABD)',
-            color: 'white'
+            touchAction: 'none',
+            userSelect: 'none',
+            WebkitUserSelect: 'none'
           }}
-        >
-          {orientation === 'portrait' ? '切到横屏' : '切到竖屏'}
-        </button>
-      )}
+        />
+        {/* 横竖屏切换按钮：仅移动端显示，并固定定位以保证可见性 */}
+        {isMobile && (
+          <button
+            onClick={toggleOrientation}
+            className="fixed top-4 right-4 z-[2000] px-4 py-2 rounded-full shadow-md text-sm md:text-base"
+            style={{
+              background: 'linear-gradient(to right, #4A90E2, #357ABD)',
+              color: 'white',
+              pointerEvents: 'auto'
+            }}
+          >
+            {orientation === 'portrait' ? '切到横屏' : '切到竖屏'}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
