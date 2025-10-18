@@ -20,7 +20,9 @@ export default class PhaserGame {
       },
       scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        fullscreenTarget: parent,
+        expandParent: true
       },
       scene: [GameScene],
       // 手机端优化

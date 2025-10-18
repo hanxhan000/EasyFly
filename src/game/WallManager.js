@@ -120,7 +120,7 @@ export default class WallManager {
     let scoreGained = 0;
     for (const wall of this.walls) {
       if (wall.checkPass(playerX)) {
-        scoreGained += SCORE_CONFIG.PASS_BONUS; // 使用配置的分数(10分)
+        scoreGained += SCORE_CONFIG.PASS_BONUS; // 使用配置的分数(1分)
         console.log('[WallManager] 🏆 得分!', { 
           scoreGained, 
           PASS_BONUS: SCORE_CONFIG.PASS_BONUS,
