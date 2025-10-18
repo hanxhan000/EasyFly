@@ -31,7 +31,7 @@ export default class GameScene extends Phaser.Scene {
     // 创建崖壁管理器
     this.wallManager = new WallManager(this);
     
-    // 分数显示（从 gameStore 读取，使用实际画布尺寸）
+    // 分数显示（从 gameStore 读取，使用实际画布尺寸并确保可见）
     const actualWidth = this.cameras.main.width;
     this.scoreText = this.add.text(
       actualWidth / 2,
@@ -39,12 +39,16 @@ export default class GameScene extends Phaser.Scene {
       this.gameStore.currentScore.toString(),
       {
         fontSize: '64px',
-        fontFamily: 'Poppins',
+        fontFamily: 'Poppins, Arial, sans-serif',
         color: '#FFFFFF',
         stroke: '#FF6B35',
         strokeThickness: 6
       }
     ).setOrigin(0.5);
+    
+    // 确保分数文本在摄像机视口中
+    this.scoreText.setScrollFactor(0);  // 固定在屏幕上，不随摄像机移动
+    this.scoreText.setDepth(1000); // 确保在最上层
     
     // 输入处理
     this.setupInput();

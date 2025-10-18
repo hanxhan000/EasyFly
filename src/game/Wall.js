@@ -233,17 +233,21 @@ export default class Wall {
   }
   
   canDestroy() {
-    // 优化销毁条件：
-    // 1. 如果已穿越且完全离开屏幕，则销毁
-    // 2. 如果未穿越但完全离开屏幕（异常情况），也应销毁
+    // 正确的销毁条件：
+    // 必须同时满足：已穿越 且 完全离开屏幕左侧
     const offScreen = this.isOffScreen();
-    const canDestroy = this.passed || offScreen;
+    const canDestroy = this.passed && offScreen;
     
     if (canDestroy) {
       console.log('[Wall] ✅ 可以销毁', { 
         wallX: Math.round(this.x), 
         passed: this.passed, 
         offScreen 
+      });
+    } else if (offScreen && !this.passed) {
+      console.log('[Wall] ⚠️ 警告: 山崖离开屏幕但未被穿越!', {
+        wallX: Math.round(this.x),
+        passed: this.passed
       });
     }
     
