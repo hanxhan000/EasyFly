@@ -25,8 +25,8 @@ export default class WallManager {
   }
   
   spawnWall() {
-    const gameWidth = this.scene.game.config.width;
-    const gameHeight = this.scene.game.config.height;
+    const gameWidth = this.scene.cameras.main.width;
+    const gameHeight = this.scene.cameras.main.height;
     
     // 获取飞机当前位置，如果没有飞机则使用中间位置
     const playerY = this.scene.player ? this.scene.player.y : gameHeight / 2;
@@ -62,7 +62,7 @@ export default class WallManager {
     this.updateDifficulty(score);
     
     // 基于距离生成山崖
-    const gameWidth = this.scene.game.config.width;
+    const gameWidth = this.scene.cameras.main.width;
     const shouldSpawn = this.shouldSpawnNewWall(gameWidth);
     
     if (shouldSpawn) {
@@ -120,7 +120,13 @@ export default class WallManager {
     let scoreGained = 0;
     for (const wall of this.walls) {
       if (wall.checkPass(playerX)) {
-        scoreGained += SCORE_CONFIG.PASS_BONUS; // 使用配置的分数(1分)
+        scoreGained += SCORE_CONFIG.PASS_BONUS; // 使用配置的分数(10分)
+        console.log('[WallManager] 🏆 得分!', { 
+          scoreGained, 
+          PASS_BONUS: SCORE_CONFIG.PASS_BONUS,
+          playerX: Math.round(playerX),
+          wallX: Math.round(wall.x)
+        });
       }
     }
     return scoreGained;

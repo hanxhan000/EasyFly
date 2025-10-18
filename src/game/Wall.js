@@ -13,7 +13,7 @@ export default class Wall {
     // 随机小山坡风格 (0-3: 草丛, 花朵, 波浪, 圆点)
     this.hillStyle = Phaser.Math.Between(0, 3);
     
-    const gameHeight = scene.game.config.height;
+    const gameHeight = scene.cameras.main.height;
     
     // 上崖壁高度
     this.topHeight = gapY - gapHeight / 2;

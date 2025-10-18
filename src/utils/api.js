@@ -3,10 +3,10 @@
 
 const API_BASE_URL = 'https://api.jsonbin.io/v3'; // JSONBin 免费云端存储
 const BIN_ID = '6794f8e5ad19ca34f8d8c42f'; // 排行榜数据的Bin ID
-const API_KEY = '$2a$10$YourAPIKeyHere'; // 需要注册获取
+const API_KEY = '$2a$10$pRRfhsZ8Gs0K.kC4eKJFzOULz8gqXJP6EH0kPq9LkZv4xvQy9p8ha'; // JSONBin API密钥
 
-// 备用方案：使用 localStorage 模拟云端存储
-const USE_LOCAL_STORAGE = true; // 开发时使用本地存储
+// 使用云端存储
+const USE_LOCAL_STORAGE = false; // 启用真实云端存储
 const LEADERBOARD_KEY = 'easyfly_leaderboard';
 
 /**

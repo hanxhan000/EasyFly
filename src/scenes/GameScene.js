@@ -18,11 +18,12 @@ export default class GameScene extends Phaser.Scene {
     // 背景
     this.createBackground();
     
-    // 创建玩家
+    // 创建玩家（使用实际画布高度）
+    const actualHeight = this.cameras.main.height;
     this.player = new Player(
       this,
       PLAYER_CONFIG.X,
-      this.game.config.height / 2
+      actualHeight / 2
     );
     
     console.log('[GameScene] 飞机创建完成');
@@ -56,14 +57,16 @@ export default class GameScene extends Phaser.Scene {
   createBackground() {
     console.log('[GameScene] 创建背景');
     
-    // 清新自然系 - 浅蓝到淡紫蓝渐变
+    // 清新自然系 - 浅蓝到淡紫蓝渐变（使用实际画布尺寸）
     const graphics = this.add.graphics();
+    const actualWidth = this.cameras.main.width;
+    const actualHeight = this.cameras.main.height;
     graphics.fillGradientStyle(
       0x87CEEB, 0x87CEEB, // 上方浅蓝
       0xB0D4FF, 0xB0D4FF, // 下方淡紫蓝
       1
     );
-    graphics.fillRect(0, 0, this.game.config.width, this.game.config.height);
+    graphics.fillRect(0, 0, actualWidth, actualHeight);
     
     // 太阳 (右上角)
     this.createSun();
@@ -79,8 +82,8 @@ export default class GameScene extends Phaser.Scene {
   
   createSun() {
     const sun = this.add.graphics();
-    const gameWidth = this.game.config.width;
-    const gameHeight = this.game.config.height;
+    const gameWidth = this.cameras.main.width;
+    const gameHeight = this.cameras.main.height;
     const sunRadius = 85; // 太阳最大半径（含光晕）
     
     const startX = gameWidth - 100; // 右侧起始位置
@@ -505,8 +508,8 @@ export default class GameScene extends Phaser.Scene {
     // 更新崖壁（使用 gameStore 中的分数）
     this.wallManager.update(delta, this.gameStore.currentScore);
     
-    // 检查边界碰撞 (飞机碰到顶部或底部)
-    const gameHeight = this.game.config.height;
+    // 检查边界碰撞 (飞机碰到顶部或底部) - 使用实际画布高度
+    const gameHeight = this.cameras.main.height;
     if (this.player.y <= this.player.size / 2 || this.player.y >= gameHeight - this.player.size / 2) {
       console.log('[GameScene] ⛔ 飞机碰到边界!', { 
         y: Math.round(this.player.y), 

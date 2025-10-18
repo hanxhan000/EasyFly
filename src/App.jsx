@@ -79,11 +79,11 @@ function App() {
   };
   
   return (
-    <div className="w-full h-screen overflow-hidden relative">
+    <div className="w-full h-full min-h-screen overflow-hidden relative flex flex-col">
       
       {/* 游戏画布 */}
       {currentView === 'game' && (
-        <div className="w-full h-full">
+        <div className="w-full h-full flex-1">
           <GameCanvas phaserGameRef={phaserGameRef} />
         </div>
       )}

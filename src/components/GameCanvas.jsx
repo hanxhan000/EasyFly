@@ -27,8 +27,7 @@ export default function GameCanvas({ phaserGameRef }) {
   return (
     <div 
       ref={gameRef} 
-      className="w-full h-full flex items-center justify-center"
-      style={{ minHeight: '600px' }}
+      className="w-full h-screen flex items-center justify-center bg-sky-200"
     />
   );
 }

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyFly - 创建GitHub仓库</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            padding: 40px;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .emoji {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .step-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .step-content {
+            color: #666;
+            line-height: 1.8;
+            margin-left: 42px;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #856404;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 20px auto;
+            display: block;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #856404;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #155724;
+        }
+        
+        code {
+            background: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji">🚀</div>
+        <h1>创建 EasyFly GitHub 仓库</h1>
+        
+        <div class="warning">
+            ⚠️ <strong>重要：</strong>请确保你已登录GitHub账号 <code>hanxhan000</code>
+        </div>
+        
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">1</span>
+                点击下方按钮创建仓库
+            </div>
+            <div class="step-content">
+                点击按钮会跳转到GitHub创建仓库页面，仓库名称已自动填写
+            </div>
+        </div>
+        
+        <a href="https://github.com/new?name=EasyFly&description=EasyFly%20-%20%E5%8F%AF%E7%88%B1%E7%9A%84%E9%A3%9E%E8%A1%8C%E8%BA%B2%E9%81%BF%E5%B0%8F%E6%B8%B8%E6%88%8F&visibility=public" target="_blank" class="btn">
+            🎮 创建 EasyFly 仓库
+        </a>
+        
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">2</span>
+                确认仓库设置
+            </div>
+            <div class="step-content">
+                <ul style="list-style: none; padding: 0;">
+                    <li>✅ Repository name: <span class="highlight">EasyFly</span></li>
+                    <li>✅ 设置为 <span class="highlight">Public</span>（公开）</li>
+                    <li>❌ <strong>不要勾选</strong> "Add a README file"</li>
+                    <li>❌ <strong>不要勾选</strong> "Add .gitignore"</li>
+                    <li>❌ <strong>不要勾选</strong> "Choose a license"</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">3</span>
+                点击 "Create repository"
+            </div>
+            <div class="step-content">
+                创建完成后，<strong>关闭这个页面</strong>，然后在PowerShell中告诉我："仓库已创建"
+            </div>
+        </div>
+        
+        <div class="success">
+            ✨ <strong>创建完成后会发生什么？</strong><br>
+            我会自动推送代码到GitHub，并部署到GitHub Pages，整个过程约2-3分钟
+        </div>
+        
+        <div class="footer">
+            <p><strong>EasyFly</strong> - 可爱的飞行躲避小游戏</p>
+            <p style="margin-top: 10px; color: #999;">Made by hanxhan000 🎮</p>
+        </div>
+    </div>
+    
+    <script>
+        // 自动打开创建页面
+        setTimeout(() => {
+            const confirmed = confirm('是否立即打开GitHub创建仓库页面？');
+            if (confirmed) {
+                window.open('https://github.com/new?name=EasyFly&description=EasyFly%20-%20%E5%8F%AF%E7%88%B1%E7%9A%84%E9%A3%9E%E8%A1%8C%E8%BA%B2%E9%81%BF%E5%B0%8F%E6%B8%B8%E6%88%8F&visibility=public', '_blank');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

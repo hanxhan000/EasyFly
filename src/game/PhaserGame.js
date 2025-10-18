@@ -22,7 +22,19 @@ export default class PhaserGame {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
       },
-      scene: [GameScene]
+      scene: [GameScene],
+      // 手机端优化
+      render: {
+        pixelArt: false,
+        antialias: true
+      },
+      // 触摸输入优化
+      input: {
+        touch: {
+          target: parent,
+          capture: true
+        }
+      }
     };
     
     this.game = new Phaser.Game(config);
