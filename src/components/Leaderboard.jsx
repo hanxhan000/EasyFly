@@ -24,6 +24,7 @@ export default function Leaderboard({ onClose }) {
   };
   
   const data = leaderboard.length > 0 ? leaderboard : [];
+  const dataTop10 = [...data].sort((a, b) => b.score - a.score).slice(0, 10);
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -45,24 +46,24 @@ export default function Leaderboard({ onClose }) {
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-game-blue border-t-transparent"></div>
             <p className="mt-4 text-gray-600">加载中...</p>
           </div>
-        ) : data.length === 0 ? (
+        ) : dataTop10.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">🏆 排行榜还没有记录</p>
             <p className="text-gray-400 text-sm mt-2">快来创造第一个记录吧！</p>
           </div>
         ) : (
           <div className="space-y-2">
-            {data.map((entry, index) => (
+            {dataTop10.map((entry, index) => (
               <div
                 key={index}
                 className={`flex items-center justify-between p-4 rounded-xl transition ${
                   index < 3
-                    ? 'bg-gradient-to-r from-yellow-100 to-yellow-50 border-2 border-yellow-300'
-                    : 'bg-gray-50 hover:bg-gray-100'
-                }`}
+                ? 'bg-gradient-to-r from-yellow-50 to-white'
+                : 'bg-gray-50 hover:bg-gray-100'
+              }`}
               >
-                <div className="flex items-center gap-4 flex-1">
-                  <div className={`text-2xl font-bold w-12 text-center ${
+                <div className="flex items-center space-x-4">
+                  <div className={`text-2xl font-bold ${
                     index === 0 ? 'text-yellow-500' :
                     index === 1 ? 'text-gray-400' :
                     index === 2 ? 'text-orange-600' :

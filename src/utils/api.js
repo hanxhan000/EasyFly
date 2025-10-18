@@ -77,8 +77,7 @@ export async function submitScore(playerName, score) {
     let leaderboard = await fetchLeaderboard();
     leaderboard.push(newEntry);
     leaderboard.sort((a, b) => b.score - a.score);
-    leaderboard = leaderboard.slice(0, 10);
-    
+    // 云端保留完整历史，不在此处截断；仅前端展示裁剪Top10
     const response = await fetch(`${API_BASE_URL}/b/${BIN_ID}`, {
       method: 'PUT',
       headers: {
