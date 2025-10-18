@@ -258,6 +258,7 @@ export default class Wall {
   checkPass(playerX) {
     // 飞机中心点穿过山崖右边缘时计分
     const wallRightEdge = this.x + WALL_CONFIG.WIDTH;
+    console.log('[Wall] 检查穿越 - 飞机:', Math.round(playerX), '山崖右边缘:', Math.round(wallRightEdge), '已穿越:', this.passed);
     if (!this.passed && playerX > wallRightEdge) {
       this.passed = true;
       console.log('[Wall] ✅ 穿越成功!', { 

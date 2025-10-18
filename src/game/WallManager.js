@@ -117,6 +117,7 @@ export default class WallManager {
   }
   
   checkPassed(playerX) {
+    console.log('[WallManager] 检查穿越 - 飞机位置:', Math.round(playerX), '山崖数量:', this.walls.length);
     let scoreGained = 0;
     for (const wall of this.walls) {
       if (wall.checkPass(playerX)) {
@@ -129,6 +130,7 @@ export default class WallManager {
         });
       }
     }
+    console.log('[WallManager] 总得分:', scoreGained);
     return scoreGained;
   }
   

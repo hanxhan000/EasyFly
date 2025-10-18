@@ -263,10 +263,10 @@ export default class GameScene extends Phaser.Scene {
   }
   
   drawSunFaceSmile() {
-    // 微笑表情 - 眯眯眼 + 温柔笑嘴
+    // 微笑表情 - 眪眯眼 + 温柔笑嘴
     this.sun.fillStyle(0xFF8C42, 1);
     
-    // 眯眯眼（用弧线表示）
+    // 眪眯眼（用弧线表示）
     this.sun.lineStyle(3, 0xFF8C42);
     this.sun.beginPath();
     this.sun.arc(-10, -5, 4, 0.3, Math.PI - 0.3);
@@ -527,8 +527,10 @@ export default class GameScene extends Phaser.Scene {
     }
     
     // 检查穿越 (只计算穿越山崖个数,不计时间分)
+    console.log('[GameScene] 检查穿越 - 飞机位置:', Math.round(this.player.x));
     const passScore = this.wallManager.checkPassed(this.player.x);
     if (passScore > 0) {
+      console.log('[GameScene] 🎯 得分!', { passScore });
       // 直接更新 gameStore
       const newScore = this.gameStore.currentScore + passScore;
       this.gameStore.updateScore(newScore);
@@ -547,6 +549,8 @@ export default class GameScene extends Phaser.Scene {
       
       // 通过音效
       this.playSound('pass');
+    } else {
+      console.log('[GameScene] 未得分 - 当前分数:', this.gameStore.currentScore);
     }
   }
   

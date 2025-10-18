@@ -35,11 +35,12 @@ export default function GameCanvas({ phaserGameRef }) {
     <div className="relative w-full h-full">
       <div 
         ref={gameRef} 
-        className={`w-full h-screen flex items-center justify-center bg-sky-200 relative overflow-hidden ${isLandscape ? 'landscape' : 'portrait'}`}
+        className="w-full h-screen flex items-center justify-center bg-sky-200 relative overflow-hidden"
         style={{
           touchAction: 'none',
           userSelect: 'none',
-          WebkitUserSelect: 'none'
+          WebkitUserSelect: 'none',
+          zIndex: 10
         }}
       />
       
@@ -48,7 +49,8 @@ export default function GameCanvas({ phaserGameRef }) {
         onClick={toggleOrientation}
         className="fixed top-4 right-4 z-50 bg-white bg-opacity-80 rounded-full p-3 shadow-lg hover:bg-opacity-100 transition-all"
         style={{
-          backdropFilter: 'blur(10px)'
+          backdropFilter: 'blur(10px)',
+          zIndex: 1000
         }}
       >
         {isLandscape ? (
