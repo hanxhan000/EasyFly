@@ -4,13 +4,14 @@ import { useGameStore } from '../stores/gameStore';
 export default function MainMenu({ onStartGame, onShowLeaderboard }) {
   console.log('[MainMenu] 渲染主菜单');
   const { orientation } = useGameStore();
-  const containerClass = orientation === 'landscape' ? 'flex-row gap-12' : 'flex-col';
-  const logoSizeClass = orientation === 'landscape' ? 'text-6xl' : 'text-7xl';
-  const buttonWidthClass = orientation === 'landscape' ? 'w-72' : 'w-64';
+  const isLandscape = orientation === 'landscape';
+  const containerClass = isLandscape ? 'flex-row gap-8' : 'flex-col gap-6';
+  const logoSizeClass = isLandscape ? 'text-6xl' : 'text-7xl';
+  const buttonWidthClass = isLandscape ? 'w-[220px] max-w-[80vw]' : 'w-[260px] max-w-[90vw]';
   
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'transparent' }}>
-      <div className={`text-center flex ${containerClass} items-center`}>        
+      <div className={`text-center flex ${containerClass} items-center px-4`}>        
         {/* 左侧区域：Logo与说明 */}
         <div className="mb-8">
           <h1 className={`${logoSizeClass} font-bold mb-4`} 
@@ -26,10 +27,10 @@ export default function MainMenu({ onStartGame, onShowLeaderboard }) {
         </div>
         
         {/* 右侧区域：按钮 */}
-        <div className={`space-y-4 flex flex-col items-center ${orientation === 'landscape' ? 'mt-0' : ''}`}>
+        <div className={`space-y-4 flex flex-col items-center ${isLandscape ? 'mt-0' : ''}`}>
           <button
             onClick={onStartGame}
-            className={`text-xl px-12 py-4 ${buttonWidthClass} rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95`}
+            className={`text-xl px-8 py-4 ${buttonWidthClass} rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95`}
             style={{
               background: 'linear-gradient(to right, #4A90E2, #357ABD)',
               color: 'white'
@@ -40,7 +41,7 @@ export default function MainMenu({ onStartGame, onShowLeaderboard }) {
           
           <button
             onClick={onShowLeaderboard}
-            className={`text-lg px-10 py-3 ${buttonWidthClass} rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95`}
+            className={`text-lg px-8 py-3 ${buttonWidthClass} rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95`}
             style={{
               backgroundColor: 'white',
               color: '#4A90E2'

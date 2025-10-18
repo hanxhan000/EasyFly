@@ -7,9 +7,9 @@ export default function GameCanvas({ phaserGameRef }) {
   // 传递Zustand store API（而非一次性快照），避免在Phaser场景中读取到旧值
   const gameStore = useGameStore; // 注意：不调用hook，直接传递store函数本身
   // UI层使用hook读取orientation与操作
-  const { orientation, toggleOrientation } = useGameStore();
+  const { orientation, setOrientation } = useGameStore();
 
-  // 仅在移动端显示横竖屏切换按钮（更稳健的检测）
+  // 移动端检测（更稳健）
   const isMobile = useMemo(() => {
     if (typeof window === 'undefined') return false;
     const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
@@ -21,59 +21,39 @@ export default function GameCanvas({ phaserGameRef }) {
   }, []);
   
   useEffect(() => {
-    console.log('[GameCanvas] useEffect 触发', { 
-      hasGameRef: !!gameRef.current, 
-      hasPhaserGame: !!phaserGameRef.current 
-    });
+    // 移动端默认强制横屏布局（仅设置状态，不改变系统旋转）
+    if (isMobile) {
+      try {
+        useGameStore.getState().setOrientation('landscape');
+      } catch {}
+    }
     
     // 每次mount都创建新的Phaser实例（因为返回菜单时已销毁）
     if (gameRef.current && !phaserGameRef.current) {
-      console.log('[GameCanvas] 创建Phaser游戏实例');
       phaserGameRef.current = new PhaserGame(gameRef.current, gameStore);
+      // 初始化后通知Phaser按移动端横屏尺寸计算
+      if (isMobile && phaserGameRef.current?.setOrientation) {
+        phaserGameRef.current.setOrientation('landscape');
+      }
     }
     
     return () => {
-      console.log('[GameCanvas] 组件unmount');
       // 不在这里销毁，由handleBackToMenu统一管理
     };
   }, []); // 只在mount时执行一次
   
-  // 监听orientation变化，移动端才通知Phaser调整尺寸；Web端保持整屏占用
-  useEffect(() => {
-    if (!isMobile) return;
-    if (phaserGameRef.current && phaserGameRef.current.setOrientation) {
-      phaserGameRef.current.setOrientation(orientation);
-    }
-  }, [orientation, isMobile]);
-  
   return (
     <div className="relative w-full h-full">
-      {/* 外层容器：桌面端增加左右留白，移动端占满宽度 */}
-      <div className={isMobile ? 'relative w-full h-screen' : 'relative w-full h-screen max-w-[1200px] mx-auto px-6'}>
-        <div 
-          ref={gameRef} 
-          className="w-full h-full flex items-center justify-center bg-sky-200 relative overflow-hidden"
-          style={{
-            touchAction: 'none',
-            userSelect: 'none',
-            WebkitUserSelect: 'none'
-          }}
-        />
-        {/* 横竖屏切换按钮：仅移动端显示，并固定定位以保证可见性 */}
-        {isMobile && (
-          <button
-            onClick={toggleOrientation}
-            className="fixed top-4 right-4 z-[2000] px-4 py-2 rounded-full shadow-md text-sm md:text-base"
-            style={{
-              background: 'linear-gradient(to right, #4A90E2, #357ABD)',
-              color: 'white',
-              pointerEvents: 'auto'
-            }}
-          >
-            {orientation === 'portrait' ? '切到横屏' : '切到竖屏'}
-          </button>
-        )}
-      </div>
+      <div 
+        ref={gameRef} 
+        className="w-full h-screen flex items-center justify-center bg-sky-200 relative overflow-hidden"
+        style={{
+          touchAction: 'none',
+          userSelect: 'none',
+          WebkitUserSelect: 'none'
+        }}
+      />
+      {/* 移除移动端横竖屏切换按钮：按需求默认横屏，无按钮 */}
     </div>
   );
 }

@@ -29,16 +29,18 @@ export default function GameOver({ onRestart, onMenu }) {
     }
   };
   
-  const containerStyle = orientation === 'landscape'
-    ? 'w-[640px] max-w-[80vw]'
-    : 'w-[480px] max-w-[90vw]';
+  // 容器宽高比例：根据方向与视口自适应，避免移动端遮挡
+  const isLandscape = orientation === 'landscape';
+  const containerClasses = `bg-white/95 rounded-2xl shadow-2xl ${isLandscape ? 'p-5' : 'p-6'} ` +
+    `${isLandscape ? 'max-w-[70vw]' : 'max-w-[90vw]'} ` +
+    'w-[clamp(340px,70vw,720px)] max-h-[85vh] overflow-y-auto';
   
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[3000]" style={{ backgroundColor: 'transparent', pointerEvents: 'auto' }}>
-      <div className={`bg-white/95 rounded-2xl shadow-2xl p-6 ${containerStyle}`}>
+      <div className={containerClasses}>
         <h2 className="text-3xl font-bold text-game-blue mb-4 text-center">游戏结束</h2>
         
-        <div className={`mb-4 flex ${orientation === 'landscape' ? 'flex-row gap-6 items-center justify-between' : 'flex-col gap-2 items-center'}`}>
+        <div className={`mb-4 flex ${isLandscape ? 'flex-row gap-6 items-center justify-between' : 'flex-col gap-2 items-center'}`}>
           <div className="text-center">
             <p className="text-lg text-gray-600">本次得分</p>
             <p className="text-5xl font-extrabold text-game-blue">{currentScore}</p>
@@ -52,7 +54,7 @@ export default function GameOver({ onRestart, onMenu }) {
         {!submitted && (
           <form onSubmit={handleSubmit} className="mb-4">
             <label className="block mb-2 text-gray-700">提交到排行榜(可选)</label>
-            <div className={`flex ${orientation === 'landscape' ? 'flex-row gap-3' : 'flex-col gap-3'}`}>
+            <div className={`flex ${isLandscape ? 'flex-row gap-3' : 'flex-col gap-3'}`}>
               <input
                 type="text"
                 value={playerName}
@@ -79,7 +81,7 @@ export default function GameOver({ onRestart, onMenu }) {
           </div>
         )}
         
-        <div className={`flex ${orientation === 'landscape' ? 'flex-row gap-3' : 'flex-col gap-3'}`}>
+        <div className={`flex ${isLandscape ? 'flex-row gap-3' : 'flex-col gap-3'}`}>
           <button
             onClick={onRestart}
             className="flex-1 btn-primary"
