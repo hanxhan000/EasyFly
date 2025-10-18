@@ -486,6 +486,18 @@ export default class GameScene extends Phaser.Scene {
       }
     });
     
+    // 移动端防护：手指移出画布或系统手势打断，确保停止上升
+    this.input.on('pointermove', (pointer) => {
+      if (this.isGameActive && !pointer.isDown) {
+        this.player.stopFly();
+      }
+    });
+    this.input.on('pointerupoutside', () => {
+      if (this.isGameActive) {
+        this.player.stopFly();
+      }
+    });
+    
     // 键盘输入(PC端调试) - 空格键
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
