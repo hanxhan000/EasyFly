@@ -74,6 +74,15 @@ export default class WallManager {
       const wall = this.walls[i];
       wall.update();
       
+      // 添加状态监控
+      console.log('[WallManager] 山崖状态', {
+        index: i,
+        wallX: Math.round(wall.x),
+        passed: wall.passed,
+        offScreen: wall.isOffScreen(),
+        canDestroy: wall.canDestroy()
+      });
+      
       // 只有穿越后且离开屏幕才销毁
       if (wall.canDestroy()) {
         console.log('[WallManager] 🗑️ 销毁山崖', { 

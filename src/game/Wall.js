@@ -233,22 +233,17 @@ export default class Wall {
   }
   
   canDestroy() {
-    // 必须同时满足:
-    // 1. 已经被穿越 (passed = true)
-    // 2. 完全离开屏幕
+    // 优化销毁条件：
+    // 1. 如果已穿越且完全离开屏幕，则销毁
+    // 2. 如果未穿越但完全离开屏幕（异常情况），也应销毁
     const offScreen = this.isOffScreen();
-    const canDestroy = this.passed && offScreen;
+    const canDestroy = this.passed || offScreen;
     
     if (canDestroy) {
       console.log('[Wall] ✅ 可以销毁', { 
         wallX: Math.round(this.x), 
         passed: this.passed, 
         offScreen 
-      });
-    } else if (offScreen && !this.passed) {
-      console.log('[Wall] ⚠️ 警告: 山崖离开屏幕但未被穿越!', {
-        wallX: Math.round(this.x),
-        passed: this.passed
       });
     }
     
@@ -259,6 +254,8 @@ export default class Wall {
     // 飞机中心点穿过山崖右边缘时计分
     const wallRightEdge = this.x + WALL_CONFIG.WIDTH;
     console.log('[Wall] 检查穿越 - 飞机:', Math.round(playerX), '山崖右边缘:', Math.round(wallRightEdge), '已穿越:', this.passed);
+    
+    // 添加额外的安全检查
     if (!this.passed && playerX > wallRightEdge) {
       this.passed = true;
       console.log('[Wall] ✅ 穿越成功!', { 
@@ -272,6 +269,15 @@ export default class Wall {
       
       return true;
     }
+    
+    // 如果已经穿越但仍在检查，记录日志
+    if (this.passed && playerX > wallRightEdge) {
+      console.log('[Wall] ⚠️ 已穿越的山崖再次被检查', {
+        playerX: Math.round(playerX),
+        wallRight: Math.round(wallRightEdge)
+      });
+    }
+    
     return false;
   }
   
